@@ -69,15 +69,18 @@ class ProductList {
   public $conn;
 
   private $productList = array();
-
+  public $host = $_ENV["MYSQL_HOST"];
+  public $username = "root";
+  public $password = "";
+  public $dbname = "product_db";
 
   public function __construct() {
     // Connect to the database
-    $host = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "product_db";
-    $this->conn = mysqli_connect($host, $username, $password, $dbname);
+    // $host = "localhost";
+    // $username = "root";
+    // $password = "";
+    // $dbname = "product_db";
+    $this->conn = mysqli_connect($this->host, $this->username, $this->password, $this->dbname);
 
     // Check for connection error
     if (!$this->conn) {
