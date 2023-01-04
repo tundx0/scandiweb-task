@@ -25,8 +25,8 @@ class ProductController {
     $product = null;
 
     // Determine which product subclass to create based on the product-specific attribute
-    if ($type == "DVDDisc") {
-      $mod_attribute = "size: " . $productSpecificAttribute . " MB";
+    if ($type == "DVD") {
+      $mod_attribute = "Size: " . $productSpecificAttribute . " MB";
       $product = new DVDDisc($sku, $name, $price, $mod_attribute);
     }
     elseif($type == "Book") {

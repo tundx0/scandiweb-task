@@ -69,7 +69,7 @@ class ProductList {
   public $conn;
 
   private $productList = array();
-  public $host = $_ENV["MYSQL_HOST"];
+  public $host = "localhost";
   public $username = "root";
   public $password = "";
   public $dbname = "product_db";
@@ -118,7 +118,7 @@ class ProductList {
 
         $product = null;
         switch($type) {
-          case 'DVDDisc':
+          case 'DVD':
             $product = new DVDDisc($sku, $name, $price, $specificAttribute);
             break;
           case 'Book':
