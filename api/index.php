@@ -52,17 +52,15 @@ switch ($method) {
   case 'DELETE':
     // If the endpoint is api/v1/product, delete the specified products
     if ($endpoint == '/api/v1/product') {
-      // Get the request body as a JSON object
       $requestBody = file_get_contents('php://input');
       $requestData = json_decode($requestBody, true);
   
       // Extract the list of product SKUs from the request body
       $productSkus = $requestData['skus'];
   
-      // Delete the products from the product list
+      
       $productList->deleteProducts($productSkus);
   
-      // Return a success response
       header('HTTP/1.1 200 OK');
       header('Content-Type: application/json');
       echo json_encode(array('message' => 'Products deleted successfully'));
