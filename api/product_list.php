@@ -34,7 +34,7 @@ class ProductList {
 
     $sql = "INSERT INTO products (sku, name, price, type, specific_attribute) VALUES ('$sku', '$name', '$price', '$type', '$specificAttribute')";
     if (mysqli_query($this->conn, $sql)) {
-      return true;
+      return "New Product Added Successfully";
     } else {
       return "Error: " . mysqli_error($this->conn);
     }
