@@ -22,23 +22,23 @@ class ProductController {
   }
 
   public function addProduct($sku, $name, $price, $type, $productSpecificAttribute) {
-    $product = null;
-
-    // Determine which product subclass to create based on the product-specific attribute
-    if ($type == "DVD") {
-      $mod_attribute = "Size: " . $productSpecificAttribute . " MB";
-      $product = new DVDDisc($sku, $name, $price, $mod_attribute);
-    }
-    elseif($type == "Book") {
-      $mod_attribute = "Weight: " . $productSpecificAttribute . " KG";
-      $product = new Book($sku, $name, $price, $mod_attribute);
-    } else {
-      $mod_attribute = "Dimensions: " . $productSpecificAttribute;
-      $product = new Furniture($sku, $name, $price, $mod_attribute);
-    }
-
+    $product = $this->createProduct($type, $sku, $name, $price, $productSpecificAttribute);
     $this->productList->addProduct($product);
   }
+  
+  
+  private function createProduct($type, $sku, $name, $price, $productSpecificAttribute) {
+    $mod_attribute = '';
+    if ($type == "DVDDisc") {
+      $mod_attribute = "Size: " . $productSpecificAttribute . " MB";
+    } elseif($type == "Book") {
+      $mod_attribute = "Weight: " . $productSpecificAttribute . " KG";
+    } else {
+      $mod_attribute = "Dimensions: " . $productSpecificAttribute;
+    }
+    return new $type($sku, $name, $price, $mod_attribute);
+  }
+  
 
   public function deleteProducts(array $productSkus)
   {
