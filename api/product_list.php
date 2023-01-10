@@ -26,19 +26,34 @@ class ProductList {
   }
 
   public function addProduct(Product $product) {
-    $sku = $product->getSku();
-    $name = $product->getName();
-    $price = $product->getPrice();
-    $type = get_class($product);
-    $specificAttribute = $product->getProductSpecificAttribute();
+    try {
+      $sku = $product->getSku();
+      $query = "SELECT * FROM products WHERE sku = '$sku'";
+      $result = mysqli_query($this->conn, $query);
+      if (mysqli_num_rows($result) > 0) {
+          // If SKU exists, return an error message
+          return true;
+      } else {
+        // Code that might throw an error
+        $sku = $product->getSku();
+        $name = $product->getName();
+        $price = $product->getPrice();
+        $type = get_class($product);
+        $specificAttribute = $product->getProductSpecificAttribute();
 
-    $sql = "INSERT INTO products (sku, name, price, type, specific_attribute) VALUES ('$sku', '$name', '$price', '$type', '$specificAttribute')";
-    if (mysqli_query($this->conn, $sql)) {
-      return "New Product Added Successfully";
-    } else {
-      return "Error: " . mysqli_error($this->conn);
+        $sql = "INSERT INTO products (sku, name, price, type, specific_attribute) VALUES ('$sku', '$name', '$price', '$type', '$specificAttribute')";
+        if (mysqli_query($this->conn, $sql)) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    } catch (Exception $e) {
+        // Handle the error by returning an error message
+        return "Error: " . $e->getMessage();
     }
-  }
+}
+
 
   public function getProductList() {
     $this->productList = array();

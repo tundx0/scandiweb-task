@@ -78,22 +78,36 @@ switch ($method) {
     case 'POST':
       // If the endpoint is api/v1/product, add a new product
       if ($endpoint == '/api/v1/product') {
-        // Get the request body as a JSON object
-        $requestBody = file_get_contents('php://input');
-        $productData = json_decode($requestBody, true);
-    
-        // Extract the product data from the request body
-        $sku = $productData['sku'];
-        $name = $productData['name'];
-        $price = $productData['price'];
-        $type = $productData['type'];
-        $productSpecificAttribute = $productData['product_specific_attribute'];
-    
-        // Add the product using the ProductController's addProduct method
-        $productController->addProduct($sku, $name, $price, $type, $productSpecificAttribute);
-        header('HTTP/1.1 201 Created');
-        header('Content-Type: application/json');
-        echo json_encode(array('message' => 'Product added successfully'));
+        
+        try {
+          // Code that might throw an error
+          $requestBody = file_get_contents('php://input');
+          $productData = json_decode($requestBody, true);
+      
+          // Extract the product data from the request body
+          $sku = $productData['sku'];
+          $name = $productData['name'];
+          $price = $productData['price'];
+          $type = $productData['type'];
+          $productSpecificAttribute = $productData['product_specific_attribute'];
+      
+          // Add the product using the ProductController's addProduct method
+          
+          if(!$productController->addProduct($sku, $name, $price, $type, $productSpecificAttribute)){
+          header('HTTP/1.1 201 Created');
+          header('Content-Type: application/json');
+          echo json_encode(array('message' => 'Product added successfully'));
+          } else{
+            header("HTTP/1.1 500 Internal Server Error");
+            header("Content-Type: application/json");
+            echo json_encode(array("error" => "An unexpected error occurred: "));
+          }
+        } catch (Exception $e) {
+          // Handle the error by sending an appropriate response to the client
+          header("HTTP/1.1 500 Internal Server Error");
+          header("Content-Type: application/json");
+          echo json_encode(array("error" => "An unexpected error occurred: " . $e->getMessage()));
+        }// Get the request body as a JSON object
         
       }
       break;

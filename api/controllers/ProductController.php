@@ -1,7 +1,7 @@
 <?php
 class ProductController {
   protected $productList;
-
+  public $p;
   public function __construct(ProductList $productList) {
     $this->productList = $productList;
   }
@@ -22,8 +22,16 @@ class ProductController {
   }
 
   public function addProduct($sku, $name, $price, $type, $productSpecificAttribute) {
-    $product = $this->createProduct($type, $sku, $name, $price, $productSpecificAttribute);
-    $this->productList->addProduct($product);
+    try {
+      $product = $this->createProduct($type, $sku, $name, $price, $productSpecificAttribute);
+      if($this->p = $this->productList->addProduct($product)){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (Exception $e) {
+      var_dump($e);
+    }
   }
   
   
