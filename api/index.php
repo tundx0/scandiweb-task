@@ -1,7 +1,11 @@
 <?php
 
-require "product.php";
-require "controllers/ProductController.php";
+require_once 'product.php';
+require_once 'dvd_disc.php';
+require_once 'book.php';
+require_once 'furniture.php';
+require_once 'product_list.php';
+require_once "controllers/ProductController.php";
 
 
 header("Access-Control-Allow-Origin: *");
@@ -65,39 +69,41 @@ switch ($method) {
       header('Content-Type: application/json');
       echo json_encode(array('message' => 'Products deleted successfully'));
     } else {
-      // Return a 404 Not Found error if the endpoint is not api/v1/product
       header('HTTP/1.1 404 Not Found');
       header('Content-Type: application/json');
       echo json_encode(array('message' => 'Endpoint not found'));
     }
     break;
     
-  case 'POST':
-    // If the endpoint is api/v1/product, add a new product
-    if ($endpoint == '/api/v1/product') {
-      // Get the request body as a JSON object
-      $requestBody = file_get_contents('php://input');
-      $productData = json_decode($requestBody, true);
+    case 'POST':
+      // If the endpoint is api/v1/product, add a new product
+      if ($endpoint == '/api/v1/product') {
+        // Get the request body as a JSON object
+        $requestBody = file_get_contents('php://input');
+        $productData = json_decode($requestBody, true);
+    
+        // Extract the product data from the request body
+        $sku = $productData['sku'];
+        $name = $productData['name'];
+        $price = $productData['price'];
+        $type = $productData['type'];
+        $productSpecificAttribute = $productData['product_specific_attribute'];
+    
+        // Add the product using the ProductController's addProduct method
+        $productController->addProduct($sku, $name, $price, $type, $productSpecificAttribute);
+        header('HTTP/1.1 201 Created');
+        header('Content-Type: application/json');
+        echo json_encode(array('message' => 'Product added successfully'));
+        
+      }
+      break;
 
-      // Extract the product data from the request body
-      $sku = $productData['sku'];
-      $name = $productData['name'];
-      $price = $productData['price'];
-      $type = $productData['type'];
-      $productSpecificAttribute = $productData['product_specific_attribute'];
-
-      // Add the product using the ProductController's addProduct method
-      $productController->addProduct($sku, $name, $price, $type, $productSpecificAttribute);
-      header('HTTP/1.1 201 Created');
-      header('Content-Type: application/json');
-      echo json_encode(array('message' => 'Product added successfully'));
-    }
-    break;
-  default:
-    // Return an error if the HTTP method or endpoint is not supported
-    header('HTTP/1.1 405 Method Not Allowed');
-    header('Allow: GET, POST, DELETE');
-    break;
+    
+    default:
+      // Return an error if the HTTP method or endpoint is not supported
+      header('HTTP/1.1 405 Method Not Allowed');
+      header('Allow: GET, POST, DELETE');
+      break;
 }
 // $productController->addProduct('dvd5', 'The Shawshank Redemption', 9.99, 'DVDDisc', 4.7);
 // $productController->addProduct('furniture5', 'Sofa', 499.99, 'Furniture', '100x200x300');
