@@ -13,7 +13,8 @@ class ProductController {
         'sku' => $product->getSku(),
         'name' => $product->getName(),
         'price' => $product->getPrice(),
-        'product_specific_attribute' => $product->getProductSpecificAttribute()
+        'product_specific_attribute' => $product->getProductSpecificAttribute(),
+        'type' => get_class($product)
       );
     }
 
@@ -23,7 +24,7 @@ class ProductController {
 
   public function addProduct($sku, $name, $price, $type, $productSpecificAttribute) {
     try {
-      $product = $this->createProduct($type, $sku, $name, $price, $productSpecificAttribute);
+      $product = new $type($sku, $name, $price, $productSpecificAttribute);
       if($this->p = $this->productList->addProduct($product)){
         return true;
       }else{
@@ -35,17 +36,7 @@ class ProductController {
   }
   
   
-  private function createProduct($type, $sku, $name, $price, $productSpecificAttribute) {
-    $mod_attribute = '';
-    if ($type == "DVDDisc") {
-      $mod_attribute = "Size: " . $productSpecificAttribute . " MB";
-    } elseif($type == "Book") {
-      $mod_attribute = "Weight: " . $productSpecificAttribute . " KG";
-    } else {
-      $mod_attribute = "Dimensions: " . $productSpecificAttribute;
-    }
-    return new $type($sku, $name, $price, $mod_attribute);
-  }
+
   
 
   public function deleteProducts(array $productSkus)
