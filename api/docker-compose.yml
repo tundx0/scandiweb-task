@@ -1,23 +1,28 @@
-version: "3"
+version: '3.9'
 
 services:
-  api:
-    build: .
-    ports:
-      - "8080:80"
-    depends_on:
-      - db
   db:
     image: mysql:8.0
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DBNAME=product_db
-      - MYSQL_USER=ola
-      - MYSQL_PASSWORD=mindbender
+      MYSQL_DATABASE: 'product_db'
+      MYSQL_USER: 'ola'
+      MYSQL_PASSWORD: 'mypass'
+      MYSQL_ROOT_PASSWORD: 'mypassword'
     ports:
-      - "3306:3306"
+      - '3306:3306'
     volumes:
-      - ./dbdata:/var/lib/mysql
-      - ./product_db.sql:/docker-entrypoint-initdb.d/product_db.sql
-    command:
-      ["mysqld", "--init-file=/docker-entrypoint-initdb.d/product_db.sql"]
+      - './data:/var/lib/mysql'
+
+  php:
+    build: .
+    restart: always
+    ports:
+      - '8000:80'
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: 'product_db'
+      DB_USER: 'root'
+      DB_PASSWORD: ''
