@@ -6,9 +6,9 @@ class ProductList {
   public $conn;
 
   private $productList = array();
-  public $host = "localhost";
-  public $username = "root";
-  public $password = "";
+  public $host = "host.docker.internal";
+  public $username = "ola";
+  public $password = "mypass";
   public $dbname = "product_db";
 
   public function __construct() {
