@@ -1,8 +1,7 @@
 
 -- Database: `product_db`
 --
-CREATE DATABASE product_db;
-USE product_db;
+
 -- --------------------------------------------------------
 
 CREATE TABLE products (
