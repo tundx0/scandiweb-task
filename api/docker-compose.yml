@@ -13,6 +13,7 @@ services:
       - '3306:3306'
     volumes:
       - './data:/var/lib/mysql'
+      - './scripts:/docker-entrypoint-initdb.d/' # add this line to mount the directory containing the script
 
   php:
     build: .
